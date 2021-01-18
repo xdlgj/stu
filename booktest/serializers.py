@@ -11,6 +11,7 @@
     label： 字段说明
 """
 from rest_framework import serializers
+from booktest.models import BookInfo
 
 
 # 1、定义书籍序列化器
@@ -21,3 +22,22 @@ class BookInfoSerializer(serializers.Serializer):
     bread = serializers.IntegerField(default=0, label='阅读量')
     bcomment = serializers.IntegerField(default=0, label='评论量')
     is_delete = serializers.BooleanField(default=False, label='逻辑删除')
+
+
+class HeroInfoSerializer(serializers.Serializer):
+    GENDER_CHOICES = (
+        (0, 'male'),
+        (1, 'female')
+    )
+    id = serializers.IntegerField(label='Id', read_only=True)
+    hname = serializers.CharField(label='名字', max_length=20),
+    hgender = serializers.ChoiceField(choices=GENDER_CHOICES, label='性别', required=False)
+    hcomment = serializers.CharField(label='描述信息', max_length=200, required=False, allow_blank=True)
+
+    # 1、关联书籍外建，主键
+    # hbook = serializers.PrimaryKeyRelatedField(read_only=True)
+    # hbook = serializers.PrimaryKeyRelatedField(queryset=BookInfo.objects.all())
+    # 2、关联书籍，使用模型类， __str__方法返回值
+    # hbook = serializers.StringRelatedField(read_only=True)
+    # 3、关联书籍序列化器  OrderedDict([('id', 2), ('btitle', '平凡的世界'), ('bpub_date', '1980-05-01T00:00:00Z'), ('bread', 200), ('bcomment', 10), ('is_delete', False)])
+    hbook = BookInfoSerializer()

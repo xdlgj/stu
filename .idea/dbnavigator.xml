@@ -37,6 +37,7 @@
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files>
       <object connection-id="0fbee6eb-2113-4922-a1d8-6228840ca815" object-ref="schemas/main/tables/tb_books" />
+      <object connection-id="0fbee6eb-2113-4922-a1d8-6228840ca815" object-ref="schemas/main/tables/tb_heros" />
     </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
@@ -56,6 +57,9 @@
       <filter id="631fdd28-84d8-4488-82fe-eeecc96ec853" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND" />
     </filter-actions>
     <filter-actions connection-id="0fbee6eb-2113-4922-a1d8-6228840ca815" dataset="main.auth_group_permissions" active-filter-id="" />
+    <filter-actions connection-id="0fbee6eb-2113-4922-a1d8-6228840ca815" dataset="main.tb_heros" active-filter-id="1c78fe2b-a9ae-40ff-a8f5-9d14e3edeb8f">
+      <filter id="1c78fe2b-a9ae-40ff-a8f5-9d14e3edeb8f" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND" />
+    </filter-actions>
     <filter-actions connection-id="0fbee6eb-2113-4922-a1d8-6228840ca815" dataset="main.django_content_type" active-filter-id="EMPTY_FILTER">
       <filter id="dcac445d-81fd-4798-bcc0-a0a35a9ed27d" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND" />
     </filter-actions>
