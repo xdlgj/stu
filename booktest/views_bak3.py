@@ -41,3 +41,20 @@ hero = HeroInfo.objects.get(id=1)
 serializer = HeroInfoSerializer(instance=hero)
 # 3、转换数据
 print(serializer.data)
+"""
+4、反序列化，书籍对象
+"""
+from booktest.serializers import BookInfoSerializer
+# 1、准备数据
+book_dict = {
+    "btitle": "活着",
+    "bpub_date": "2020-1-01",
+    "bread": "50",
+    "bcomment": "20",
+}
+# 2、创建序列化器
+serializer = BookInfoSerializer(data=book_dict)
+# serializer.is_valid()
+serializer.is_valid(raise_exception=True)
+# 3、输出
+print(serializer.data)
