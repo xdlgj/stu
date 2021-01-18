@@ -34,3 +34,6 @@ class HeroInfo(models.Model):
         db_table = 'tb_heros'
         verbose_name = '英雄'
         verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.hname
