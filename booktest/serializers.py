@@ -20,6 +20,9 @@
         validate_btitle    3
         check_bpub_date    5
         validate           4
+    入库：
+        1、创建入库：序列化器需要实现create方法
+        2、更新入库
 
 """
 from rest_framework import serializers
@@ -43,6 +46,14 @@ class BookInfoSerializer(serializers.Serializer):
     bcomment = serializers.IntegerField(default=0, label='评论量')
     is_delete = serializers.BooleanField(default=False, label='逻辑删除')
 
+    # 1、关联英雄、主键, 一方中序列化多方需要添加many=True
+    # {'id': 2, 'btitle': '平凡的世界', 'bpub_date': '1980-05-01T00:00:00Z', 'bread': 200, 'bcomment': 10, 'is_delete': False, 'heroinfo_set': [1]}
+    # heroinfo_set = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
+    # 2、关联英雄、使用模型类， __str__方法返回值
+    # {'id': 2, 'btitle': '平凡的世界', 'bpub_date': '1980-05-01T00:00:00Z', 'bread': 200, 'bcomment': 10, 'is_delete': False, 'heroinfo_set': ['孙少平']}
+
+    # heroinfo_set = serializers.StringRelatedField(read_only=True, many=True)
+
     # 单字段校验
     def validate_btitle(self, value):
         print('validate_btitle')
@@ -57,20 +68,28 @@ class BookInfoSerializer(serializers.Serializer):
         :param attrs: 就是外界传进来的data（book_dict）
         :return:
         """
-        print('validate')
+        print('attrs:', attrs)
         bread = attrs['bread']
         bcomment = attrs['bcomment']
+        print(bread, bcomment)
         if bcomment > bread:
             raise serializers.ValidationError('评论量不能大于阅读量')
         return attrs
 
-    # 1、关联英雄、主键, 一方中序列化多方需要添加many=True
-    # {'id': 2, 'btitle': '平凡的世界', 'bpub_date': '1980-05-01T00:00:00Z', 'bread': 200, 'bcomment': 10, 'is_delete': False, 'heroinfo_set': [1]}
-    # heroinfo_set = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
-    # 2、关联英雄、使用模型类， __str__方法返回值
-    #{'id': 2, 'btitle': '平凡的世界', 'bpub_date': '1980-05-01T00:00:00Z', 'bread': 200, 'bcomment': 10, 'is_delete': False, 'heroinfo_set': ['孙少平']}
+    # 实现create方法
+    def create(self, validated_data):
+        print('validated_data:', validated_data)
+        return BookInfo.objects.create(**validated_data)
 
-    # heroinfo_set = serializers.StringRelatedField(read_only=True, many=True)
+    # 实现update方法
+    def update(self, instance, validated_data):
+        print('instance:', instance, 'validated_data:', validated_data)
+        instance.btitle = validated_data.get('btitle', instance.btitle)
+        instance.bpub_date = validated_data.get('bpub_date', instance.bpub_date)
+        instance.bread = validated_data.get('bread', instance.bread)
+        instance.bcomment = validated_data.get('bcomment', instance.bcomment)
+        instance.save()
+        return instance
 
 
 class HeroInfoSerializer(serializers.Serializer):

@@ -58,3 +58,38 @@ serializer = BookInfoSerializer(data=book_dict)
 serializer.is_valid(raise_exception=True)
 # 3、输出
 print(serializer.data)
+"""
+5、反序列化创建对象入库
+"""
+from booktest.serializers import BookInfoSerializer
+# 1、准备数据
+book_dict = {
+    "btitle": "活着",
+    "bpub_date": "2020-1-01",
+    "bread": "50",
+    "bcomment": "20",
+}
+# 2、创建序列化器
+serializer = BookInfoSerializer(data=book_dict)
+serializer.is_valid(raise_exception=True)
+# 3、入库，会调用序列化器中的create方法
+serializer.save()
+"""
+6、反序列化更新对象
+"""
+from booktest.serializers import BookInfoSerializer
+from booktest.models import BookInfo
+# 1、准备数据
+book_dict = {
+    "btitle": "活着",
+    "bpub_date": "2020-1-01",
+    "bread": "55",
+    "bcomment": "10",
+}
+# 2、创建序列化器
+book = BookInfo.objects.get(pk=5)
+serializer = BookInfoSerializer(instance=book, data=book_dict, partial=True)
+serializer.is_valid(raise_exception=True)
+# 3、入库，会调用序列化器中的update方法
+serializer.save()
+

@@ -35,7 +35,10 @@
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="0fbee6eb-2113-4922-a1d8-6228840ca815" object-ref="schemas/main/tables/tb_books" />
+      <object connection-id="0fbee6eb-2113-4922-a1d8-6228840ca815" object-ref="schemas/main/tables/tb_heros" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="0fbee6eb-2113-4922-a1d8-6228840ca815" />
@@ -160,7 +163,7 @@
           <session-management value="true" />
           <ddl-file-binding value="true" />
           <database-logging value="false" />
-          <connect-automatically value="false" />
+          <connect-automatically value="true" />
           <restore-workspace value="true" />
           <restore-workspace-deep value="true" />
           <environment-type value="default" />
