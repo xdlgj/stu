@@ -81,14 +81,13 @@ from booktest.serializers import BookInfoSerializer
 from booktest.models import BookInfo
 # 1、准备数据
 book_dict = {
-    "btitle": "活着",
-    "bpub_date": "2020-1-01",
-    "bread": "55",
-    "bcomment": "10",
+    "bread": "5",
 }
 # 2、创建序列化器
 book = BookInfo.objects.get(pk=5)
-serializer = BookInfoSerializer(instance=book, data=book_dict, partial=True)
+origin_data = BookInfoSerializer(instance=book).data
+origin_data.update(**book_dict)
+serializer = BookInfoSerializer(instance=book, data=origin_data, partial=True)
 serializer.is_valid(raise_exception=True)
 # 3、入库，会调用序列化器中的update方法
 serializer.save()
