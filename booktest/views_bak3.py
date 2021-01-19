@@ -84,7 +84,7 @@ book_dict = {
     "bread": "5",
 }
 # 2、创建序列化器
-book = BookInfo.objects.get(pk=5)
+book = BookInfo.objects.get(pk=6)
 origin_data = BookInfoSerializer(instance=book).data
 origin_data.update(**book_dict)
 serializer = BookInfoSerializer(instance=book, data=origin_data, partial=True)
