@@ -109,3 +109,11 @@ class HeroInfoSerializer(serializers.Serializer):
     # hbook = serializers.StringRelatedField(read_only=True)
     # 3、关联书籍序列化器  OrderedDict([('id', 2), ('btitle', '平凡的世界'), ('bpub_date', '1980-05-01T00:00:00Z'), ('bread', 200), ('bcomment', 10), ('is_delete', False)])
     # hbook = BookInfoSerializer()
+
+
+class BookInfoModelSerializer(serializers.ModelSerializer):
+    # write_only=True 不进行序列化，只进行反序列化， 在序列化的时候不进行校验，
+    # phone = serializers.CharField(max_length=11, min_length=11, write_only=True, label='手机号')
+    class Meta:
+        model = BookInfo
+        fields = '__all__'

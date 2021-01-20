@@ -92,3 +92,26 @@ serializer.is_valid(raise_exception=True)
 # 3、入库，会调用序列化器中的update方法
 serializer.save()
 
+'''*****************使用ModelSerializer,进行序列化**********************'''
+from booktest.serializers import BookInfoModelSerializer
+from booktest.models import BookInfo
+book = BookInfo.objects.get(pk=7)
+serializer = BookInfoModelSerializer(instance=book)
+serializer.data  # {'id': 7, 'btitle': '活着', 'bpub_date': '2019-05-01', 'bread': 30, 'bcomment': 10, 'is_delete': False}
+
+'''*****************使用ModelSerializer,进行反序列化**********************'''
+from booktest.serializers import BookInfoModelSerializer
+book_dict = {
+    "btitle": "平凡的世界",
+    "bpub_date": "2020-1-01",
+    "bread": "50",
+    "bcomment": "20",
+}
+serializer = BookInfoModelSerializer(data=book_dict)
+serializer.is_valid(raise_exception=True)
+serializer.save()
+"""
+调用save()方法出现下面报错的原因是： 在调用save()方法之前调用了serializer.data
+AssertionError: You cannot call `.save()` after accessing `serializer.data`.
+If you need to access data before committing to the database then inspect 'serializer.validated_data' instead.
+"""
