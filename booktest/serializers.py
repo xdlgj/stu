@@ -117,3 +117,22 @@ class BookInfoModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookInfo
         fields = '__all__'
+
+        # read_only_fields = ['bread'] # 添加只读字段
+        # 给某个字段添加限制
+        extra_kwargs = {
+            'bread': {
+                "max_value": 99999,
+                "min_value": 0
+            }
+        }
+        """
+        >>> BookInfoModelSerializer()
+            BookInfoModelSerializer():
+            id = IntegerField(label='ID', read_only=True)
+            btitle = CharField(label='名称', max_length=20)
+            bpub_date = DateField(label='发布日期')
+            bread = IntegerField(label='阅读量', max_value=99999, min_value=0, required=False)
+            bcomment = IntegerField(label='评论量', required=False)
+            is_delete = BooleanField(label='逻辑删除', required=False)
+        """
