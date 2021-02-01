@@ -4,6 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, \
+    DestroyModelMixin
 
 
 # 1、定义类，继承APIView(一级视图), 列表视图：get post
@@ -156,4 +158,50 @@ class BookDetailGenericView(GenericAPIView):
     def delete(self, request, book_id):
         self.get_object().delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+"""
+Mixin特点:
+    1、mixin类提供用于提供基本视图行为（列表视图、详情视图）的操作
+    2、配合二级视图GenericAPIView使用
+类名                提供方法                功能
+ListModelMixin      list                  查询所有数据
+CreateModelMixin    create                创建单个对象
+
+RetrieveModelMixin  retrieve              获取单个对象
+UpdateModelMixin    update                更新单个对象
+DestroyModelMixin   destroy               删除单个对象           
+"""
+
+
+class BookListMixinView(GenericAPIView, ListModelMixin, CreateModelMixin):
+    # 使用公共的属性
+    queryset = BookInfo.objects.all()
+    serializer_class = BookInfoSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
+
+
+class BookDetailMixinView(GenericAPIView, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
+    """
+    详情视图：id，  get、 put、 delete
+    get_object:
+
+    """
+    queryset = BookInfo.objects.all()
+    serializer_class = BookInfoSerializer
+    lookup_url_kwarg = 'book_id'
+
+    def get(self, request, book_id):
+        return self.retrieve(request)
+
+    def put(self, req, book_id):
+        return self.update(req)
+
+    def delete(self, request, book_id):
+        return self.destroy(request)
 

@@ -6,4 +6,6 @@ urlpatterns = [
     path('generic_books/', views.BookListGenericView.as_view()),
     # re_path(r'generic_books/(?P<pk>\d+)/', views.BookDetailGenericView.as_view()),
     re_path(r'generic_books/(?P<book_id>\d+)/', views.BookDetailGenericView.as_view()),
+    path('mixin_books/', views.BookListMixinView.as_view()),
+    re_path(r'mixin_books/(?P<book_id>\d+)/', views.BookDetailMixinView.as_view()),
 ]
