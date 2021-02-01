@@ -1,11 +1,14 @@
 from .models import BookInfo
+from django.shortcuts import get_object_or_404
 from booktest.serializers import BookInfoSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, \
+    DestroyAPIView, ListCreateAPIView, RetrieveUpdateAPIView, RetrieveDestroyAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, \
     DestroyModelMixin
+from rest_framework.viewsets import ViewSet, GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
 
 
 # 1、定义类，继承APIView(一级视图), 列表视图：get post
@@ -204,4 +207,88 @@ class BookDetailMixinView(GenericAPIView, RetrieveModelMixin, UpdateModelMixin, 
 
     def delete(self, request, book_id):
         return self.destroy(request)
+"""
+三级视图：如果没有大量自定义行为（比如发送短信，上传图片），可以使用通用视图解决
+类名                      父类（都继承GenericAPIView）          提供方法                  功能
+CreateAPIView            CreateModelMixin                    post                    创建单个对象
+ListAPIView              ListModelMixin                      get                     查询所有数据
+RetrieveAPIView          RetrieveModelMixin                  get                     获取单个对象
+UpdateAPIView            UpdateModelMixin                    put                     更新单个对象
+DestroyAPIView           DestroyModelMixin                   delete                  删除单个对象
+"""
+
+
+class BookListThirdView(ListCreateAPIView):
+    # 使用公共的属性
+    queryset = BookInfo.objects.all()
+    serializer_class = BookInfoSerializer
+
+
+class BookDetailThirdView(RetrieveUpdateDestroyAPIView):
+    """
+    详情视图：id，  get、 put、 delete
+    get_object:
+
+    """
+    queryset = BookInfo.objects.all()
+    serializer_class = BookInfoSerializer
+    lookup_url_kwarg = 'book_id'
+"""
+视图集特点：
+    1、可以将一组相关的操作放在一个类中进行完成
+    2、不提供get、post方法，使用retrieve、create方法来替代
+    3、可以将标准的请求方式（get、post、put、delete）和mixin中的方法做映射
+常见的视图集
+类名                      父类                                作用                     
+ViewSet                  APIView,                           可以做路由映射 
+                         ViewSetMixin(重写as_view)           可以提供路由映射，可以使用三个属性，三个方法
+GenericViewSet           GenericAPIView
+                         ViewSetMixin(重写as_view)
+ModelViewSet             GenericViewSet,                    所有的增删改查功能，可以使用三个属性，三个方法
+                         5个mixin类
+ReadOnlyModelViewSet     GenericViewSet，                    获取单个和多个，可以使用三个属性，三个方法
+                         ListModelMixin，
+                         RetrieveModelMixin
+"""
+
+
+class BookViewSet(ViewSet):
+    """
+    A simple ViewSet for listing or retrieving users.
+    """
+    def list(self, request):
+        queryset = BookInfo.objects.all()
+        serializer = BookInfoSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, book_id=None):
+        queryset = BookInfo.objects.all()
+        book = get_object_or_404(queryset, pk=book_id)
+        serializer = BookInfoSerializer(book)
+        return Response(serializer.data)
+
+
+class BookGenericViewSet(GenericViewSet):
+    queryset = BookInfo.objects.all()
+    serializer_class = BookInfoSerializer
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, book_id=None):
+        book = self.get_object()
+        serializer = BookInfoSerializer(book)
+        return Response(serializer.data)
+
+
+class BookROViewSet(ReadOnlyModelViewSet):
+    queryset = BookInfo.objects.all()
+    serializer_class = BookInfoSerializer
+
+
+class BookModelViewSet(ModelViewSet):
+    queryset = BookInfo.objects.all()
+    serializer_class = BookInfoSerializer
 
