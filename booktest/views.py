@@ -292,3 +292,28 @@ class BookModelViewSet(ModelViewSet):
     queryset = BookInfo.objects.all()
     serializer_class = BookInfoSerializer
 
+
+class BookInfoModelViewSet(ModelViewSet):
+    queryset = BookInfo.objects.all()
+    serializer_class = BookInfoSerializer
+
+    # 1、获取阅读量大于20的书籍
+    def bread_gt20(self, request):
+        # 1、获取指定书籍
+        books = BookInfo.objects.filter(bread__gt=20)
+        # 2、创建序列化器
+        serializer = self.get_serializer(instance=books, many=True)
+        # 3、返回响应
+        return Response(serializer.data)
+
+    # 修改书籍编号为8的，阅读量为10
+    def update_bread(self, request, pk):
+        # 获取参数
+        book = self.get_object()
+        data = request.data
+        # 创建序列化器
+        serializer = self.get_serializer(instance=book, data=data, partial=True)
+        # 校验入库
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)

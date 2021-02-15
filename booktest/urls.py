@@ -18,5 +18,7 @@ urlpatterns = [
     re_path(r'ro_books/(?P<pk>\d+)/', views.BookROViewSet.as_view({'get': 'retrieve'})),
     path('modelviewset_books/', views.BookModelViewSet.as_view({'get': 'list', 'post': 'create'})),
     re_path(r'modelviewset_books/(?P<pk>\d+)/', views.BookModelViewSet.as_view({'get': 'retrieve',
-                                                                                'put': 'update', 'delete': 'destroy'})),
+                                                                               'put': 'update', 'delete': 'destroy'})),
+    path('bread_books/', views.BookInfoModelViewSet.as_view({'get': 'bread_gt20'})),
+    re_path('bread_books/(?P<pk>\d+)/', views.BookInfoModelViewSet.as_view({'put': 'update_bread'}))
 ]

@@ -69,8 +69,8 @@ class BookInfoSerializer(serializers.Serializer):
         :return:
         """
         print('attrs:', attrs)
-        bread = attrs['bread']
-        bcomment = attrs['bcomment']
+        bread = attrs.get('bread') or self.instance.bread
+        bcomment = attrs.get('bcomment') or self.instance.bcomment
         print(bread, bcomment)
         if bcomment > bread:
             raise serializers.ValidationError('评论量不能大于阅读量')
