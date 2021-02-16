@@ -125,13 +125,34 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_PERMISSION_CLASSES': (
-#         'rest_framework.permissions.IsAuthenticated',
-#     ),
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-#         'rest_framework.authentication.SessionAuthentication',
-#         'rest_framework.authentication.BasicAuthentication',
-#     ),
-# }
+REST_FRAMEWORK = {
+    # 全局认证
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',  # 此身份验证方案使用HTTP基本身份验证，用于测试
+        'rest_framework.authentication.SessionAuthentication',  # 自己服务器认证用户
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
+    # 全局权限
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',  # 普通用户
+        'rest_framework.permissions.AllowAny',  # 所有用户
+        # 'rest_framework.permissions.IsAdminUser',  # 管理员用户
+     ),
+    # 全局限流
+    # 'DEFAULT_THROTTLE_CLASSES': [
+    #     'rest_framework.throttling.AnonRateThrottle',  # 匿名用户
+    #     'rest_framework.throttling.UserRateThrottle'  # 认证用户
+    # ],
+    # 'DEFAULT_THROTTLE_RATES': {
+    #     'anon': '2/day',
+    #     'user': '3/min'
+    # },
+    # 可选限流
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.ScopedRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'downloads': '3/min',
+        'uploads': '20/day'
+    }
+}

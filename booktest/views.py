@@ -9,6 +9,9 @@ from rest_framework.generics import GenericAPIView, ListAPIView, CreateAPIView, 
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, \
     DestroyModelMixin
 from rest_framework.viewsets import ViewSet, GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.throttling import UserRateThrottle
 
 
 # 1、定义类，继承APIView(一级视图), 列表视图：get post
@@ -27,6 +30,12 @@ class BookListView(APIView):
             request.data
     Response: 可以取代Django中自带HttpResponse、JsonResponse...
     """
+    # 局部认证
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    # throttle_classes = [UserRateThrottle]
+    throttle_scope = 'downloads'
+
     def get(self, request):
         # 1、查询所有的书籍
         books = BookInfo.objects.all()
