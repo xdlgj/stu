@@ -12,7 +12,19 @@ from rest_framework.viewsets import ViewSet, GenericViewSet, ModelViewSet, ReadO
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.throttling import UserRateThrottle
+from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination, CursorPagination
 
+
+# 自定义分页对象
+class MyPageNumberPagination(PageNumberPagination):
+    # 默认大小, 优先级高于全局配置
+    page_size = 4
+    # 前端可以指定页面大小
+    page_size_query_param = 'page_size'
+    # 页面的最大大小
+    max_page_size = 100
+
+    page_size_query_param = 'page_size'
 
 # 1、定义类，继承APIView(一级视图), 列表视图：get post
 class BookListView(APIView):
@@ -35,6 +47,7 @@ class BookListView(APIView):
     permission_classes = [IsAuthenticated]
     # throttle_classes = [UserRateThrottle]
     throttle_scope = 'downloads'
+    pagination_class = LimitOffsetPagination
 
     def get(self, request):
         # 1、查询所有的书籍
@@ -229,6 +242,7 @@ DestroyAPIView           DestroyModelMixin                   delete             
 
 class BookListThirdView(ListCreateAPIView):
     # 使用公共的属性
+    pagination_class = MyPageNumberPagination
     queryset = BookInfo.objects.all()
     serializer_class = BookInfoSerializer
 

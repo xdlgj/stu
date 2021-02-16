@@ -134,7 +134,7 @@ REST_FRAMEWORK = {
     ),
     # 全局权限
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',  # 普通用户
+        # 'rest_framework.permissions.IsAuthenticated',  # 普通用户
         'rest_framework.permissions.AllowAny',  # 所有用户
         # 'rest_framework.permissions.IsAdminUser',  # 管理员用户
      ),
@@ -154,5 +154,9 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'downloads': '3/min',
         'uploads': '20/day'
-    }
+    },
+    # 全局分页
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 2,
+
 }
