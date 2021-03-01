@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'user',
     'booktest',
     'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -158,5 +159,8 @@ REST_FRAMEWORK = {
     # 全局分页
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 2,
-
+    # 全局过滤
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    # 全局异常处理
+    'EXCEPTION_HANDLER': 'booktest.my_exception.custom_exception_handler',
 }

@@ -13,6 +13,9 @@ from rest_framework.authentication import BasicAuthentication, SessionAuthentica
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.throttling import UserRateThrottle
 from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination, CursorPagination
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+from rest_framework.exceptions import APIException, ValidationError
 
 
 # 自定义分页对象
@@ -243,6 +246,9 @@ DestroyAPIView           DestroyModelMixin                   delete             
 class BookListThirdView(ListCreateAPIView):
     # 使用公共的属性
     pagination_class = MyPageNumberPagination
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['id', 'bread']
+    filterset_fields = ['bread', 'btitle']
     queryset = BookInfo.objects.all()
     serializer_class = BookInfoSerializer
 
@@ -340,3 +346,13 @@ class BookInfoModelViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+
+class TestView(APIView):
+    def get(self, request):
+
+        raise APIException("APIException.....")
+
+
+        raise Exception("报错了")
+        return Response('test......')
